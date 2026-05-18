@@ -1,1 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+<title>Pokédex</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#111;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.pokedex{
+    width:95%;
+    max-width:1000px;
+    background:#d62828;
+    border-radius:30px;
+    padding:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    box-shadow:0 0 30px black;
+}
+
+@media(max-width:800px){
+    .pokedex{
+        grid-template-columns:1fr;
+    }
+}
+
+.left{
+    background:#b71c1c;
+    border-radius:20px;
+    padding:20px;
+}
+
+.right{
+    background:#8b0000;
+    border-radius:20px;
+    padding:20px;
+}
+
+.screen{
+    background:#98fb98;
+    border-radius:20px;
+    height:350px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+.screen img{
+    width:80%;
+    max-height:300px;
+    object-fit:contain;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:black;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#222;
+}
+
+.type{
+    display:inline-block;
+    padding:8px 14px;
+    margin:5px;
+    border-radius:20px;
+    background:gold;
+    color:black;
+    font-weight:bold;
+}
+
+.stat{
+    margin:10px 0;
+}
+
+.bar{
+    height:15px;
+    background:#333;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    background:#00ff99;
+}
+
+h1{
+    margin-top:0;
+}
+
+.desc{
+    background:black;
+    color:#00ff99;
+    padding:15px;
+    border-radius:10px;
+    margin:20px 0;
+    min-height:80px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="pokedex">
+
+    <div class="left">
+
+        <div class="screen">
+            <img id="pokemonImage" src="">
+        </div>
+
+    </div>
+
+    <div class="right">
+
+        <input type="text" id="search" placeholder="Nom ou numéro">
+
+        <button onclick="loadPokemon()">
+            Rechercher
+        </button>
+
+        <h1 id="pokemonName">Chargement...</h1>
+
+        <div id="types"></div>
+
+        <div class="desc" id="description"></div>
+
+        <p><b>Taille :</b> <span id="height"></span></p>
+        <p><b>Poids :</b> <span id="weight"></span></p>
+
+        <div id="stats"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function loadPokemon(){
+
+    let value = document.getElementById("search").value.toLowerCase();
+
+    if(!value){
+        value = "pikachu";
+    }
+
+    // Pokémon principal
+    const pokemonRes = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${value}`
+    );
+
+    const pokemon = await pokemonRes.json();
+
+    // Description FR
+    const speciesRes = await fetch(
+        pokemon.species.url
+    );
+
+    const species = await speciesRes.json();
+
+    const frEntry = species.flavor_text_entries.find(
+        e => e.language.name === "fr"
+    );
+
+    // IMAGE
+    document.getElementById("pokemonImage").src =
+        pokemon.sprites.other["official-artwork"].front_default;
+
+    // NOM
+    document.getElementById("pokemonName").innerText =
+        pokemon.name.toUpperCase() + " #" + pokemon.id;
+
+    // TYPES
+    let typesHTML = "";
+
+    pokemon.types.forEach(t => {
+        typesHTML += `
+            <span class="type">
+                ${t.type.name}
+            </span>
+        `;
+    });
+
+    document.getElementById("types").innerHTML = typesHTML;
+
+    // DESCRIPTION
+    document.getElementById("description").innerText =
+        frEntry ? frEntry.flavor_text : "Aucune description.";
+
+    // TAILLE / POIDS
+    document.getElementById("height").innerText =
+        pokemon.height / 10 + " m";
+
+    document.getElementById("weight").innerText =
+        pokemon.weight / 10 + " kg";
+
+    // STATS
+    let statsHTML = "";
+
+    pokemon.stats.forEach(stat => {
+
+        statsHTML += `
+            <div class="stat">
+
+                <div>
+                    ${stat.stat.name} : ${stat.base_stat}
+                </div>
+
+                <div class="bar">
+                    <div class="fill"
+                         style="width:${stat.base_stat}%">
+                    </div>
+                </div>
+
+            </div>
+        `;
+    });
+
+    document.getElementById("stats").innerHTML = statsHTML;
+}
+
+loadPokemon();
+
+</script>
+
+</body>
+</html>
