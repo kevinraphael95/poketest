@@ -3,481 +3,420 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pokédex</title>
-
+<title>Pokédex Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-font-family:'Orbitron',sans-serif;
-background:
-radial-gradient(circle at top,#222,#050505);
-min-height:100vh;
-color:white;
-padding:20px;
-overflow-x:hidden;
+  font-family:'Orbitron',monospace;
+  background:linear-gradient(160deg,#0a0a0f 0%,#13131f 100%);
+  min-height:100vh;
+  color:white;
+  padding:16px;
+  overflow-x:hidden;
 }
-
-.container{
-max-width:1400px;
-margin:auto;
+.container{max-width:1100px;margin:auto}
+h1{
+  text-align:center;
+  font-size:2.8rem;
+  font-weight:900;
+  color:#e63946;
+  letter-spacing:4px;
+  margin-bottom:20px;
+  text-shadow:0 0 30px rgba(230,57,70,.4);
 }
-
-.title{
-text-align:center;
-font-size:4rem;
-font-weight:900;
-margin-bottom:30px;
-color:#ff3131;
-text-shadow:0 0 25px red;
+.search-row{display:flex;gap:8px;margin-bottom:18px}
+.search-row input{
+  flex:1;background:#1a1a2e;border:1.5px solid #e63946;
+  border-radius:10px;color:white;padding:12px 16px;
+  font-family:'Orbitron',monospace;font-size:13px;outline:none;
 }
-
-.searchBox{
-display:flex;
-gap:15px;
-margin-bottom:30px;
-flex-wrap:wrap;
+.search-row button{
+  background:#e63946;border:none;border-radius:10px;color:white;
+  padding:12px 18px;cursor:pointer;font-family:'Orbitron',monospace;
+  font-size:11px;font-weight:700;transition:opacity .2s;
 }
-
-.searchBox input{
-flex:1;
-padding:18px;
-border:none;
-border-radius:20px;
-font-size:1.1rem;
-background:#111;
-color:white;
-border:2px solid #ff3131;
-box-shadow:0 0 15px rgba(255,0,0,0.3);
-}
-
-.searchBox button{
-padding:18px 30px;
-border:none;
-border-radius:20px;
-background:#ff3131;
-color:white;
-font-weight:bold;
-font-size:1rem;
-cursor:pointer;
-transition:0.3s;
-}
-
-.searchBox button:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px red;
-}
-
-.dex{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:25px;
-}
-
-@media(max-width:1000px){
-.dex{
-grid-template-columns:1fr;
-}
-
-.title{
-font-size:2.5rem;
-}
-}
-
-.panel{
-background:rgba(20,20,20,0.95);
-border:2px solid #333;
-border-radius:30px;
-padding:25px;
-box-shadow:0 0 30px rgba(0,0,0,0.7);
-backdrop-filter:blur(10px);
-}
-
+.search-row button:hover{opacity:.85}
+.btn-rand{background:#1a1a2e!important;border:1.5px solid #333!important}
+.main{display:grid;grid-template-columns:280px 1fr;gap:16px}
+@media(max-width:700px){.main{grid-template-columns:1fr}}
+.left-col{display:flex;flex-direction:column;gap:10px}
 .screen{
-background:#97ff97;
-border-radius:30px;
-padding:20px;
-height:500px;
-display:flex;
-align-items:center;
-justify-content:center;
-position:relative;
-overflow:hidden;
+  background:radial-gradient(circle at 30% 30%,#1e3a2f,#0a1a13);
+  border-radius:16px;border:2px solid #2a2a3e;
+  height:220px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
 }
-
-.screen::before{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(transparent 50%,rgba(0,0,0,0.08) 50%);
-background-size:100% 4px;
-pointer-events:none;
+.screen-scanline{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,128,.025) 3px,rgba(0,255,128,.025) 4px);
+  pointer-events:none;border-radius:16px;
 }
-
 .screen img{
-width:85%;
-max-height:420px;
-object-fit:contain;
-filter:drop-shadow(0 0 20px rgba(0,0,0,0.5));
-animation:float 3s ease-in-out infinite;
+  max-height:190px;max-width:240px;object-fit:contain;
+  filter:drop-shadow(0 4px 14px rgba(0,255,128,.25));
+  animation:bob 4s ease-in-out infinite;
 }
-
-@keyframes float{
-0%{transform:translateY(0px)}
-50%{transform:translateY(-10px)}
-100%{transform:translateY(0px)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.poke-id{font-size:10px;color:#555;text-align:center;letter-spacing:2px;margin-top:-2px}
+.type-badges{display:flex;gap:6px;flex-wrap:wrap}
+.type-badge{padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.stat-bar-label{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;color:#aaa}
+.stat-bar-label span:last-child{color:white;font-weight:700}
+.stat-bar{height:6px;background:#1a1a2e;border-radius:999px;overflow:hidden;margin-bottom:8px}
+.stat-fill{height:100%;border-radius:999px;transition:width .8s ease}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.info-tile{background:#1a1a2e;border:0.5px solid #2a2a3e;border-radius:10px;padding:8px 10px}
+.info-tile .lbl{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.info-tile .val{font-size:13px;font-weight:700;color:white}
+.section-title{font-size:10px;letter-spacing:2px;color:#e63946;margin-bottom:8px;text-transform:uppercase}
+.desc-box{background:#0f0f1a;border:0.5px solid #2a2a3e;border-radius:10px;padding:12px;font-size:11px;color:#88dd88;line-height:1.7;font-family:monospace}
+.tier-box{background:#1a1a2e;border:0.5px solid #2a2a3e;border-radius:10px;padding:10px;display:flex;align-items:center;gap:12px}
+.tier-letter{font-size:36px;font-weight:900;line-height:1}
+.tier-desc{font-size:10px;color:#888;line-height:1.5}
+.badge-list{display:flex;flex-wrap:wrap;gap:6px}
+.badge{background:#1a1a2e;border:0.5px solid #333;border-radius:8px;padding:5px 9px;font-size:10px;color:#ccc;font-family:monospace}
+.move-badge{background:#12122a;border:0.5px solid #334;border-radius:8px;padding:5px 9px;font-size:10px;color:#88aaff;font-family:monospace}
+.loader-msg{text-align:center;padding:40px;color:#555;font-size:12px}
+.error-msg{text-align:center;padding:40px;color:#e63946;font-size:11px}
+.evo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.evo-mon{text-align:center;font-size:10px;color:#aaa;cursor:pointer}
+.evo-mon img{width:55px;height:55px;object-fit:contain;filter:brightness(.9);transition:.2s;display:block;margin:0 auto 4px}
+.evo-mon:hover img{filter:brightness(1.3) drop-shadow(0 0 8px rgba(0,255,128,.4))}
+.evo-arrow{color:#555;font-size:16px}
+.ability-row{display:flex;flex-direction:column;gap:5px}
+.ability-item{background:#12122a;border:0.5px solid #2a2a3e;border-radius:8px;padding:8px 10px;font-size:10px}
+.ability-name{color:white;font-weight:700;font-family:monospace}
+.ability-hidden{color:#f4a261;font-size:9px;margin-left:6px}
+.ability-desc{color:#888;margin-top:3px;line-height:1.5;font-family:sans-serif;font-size:10px}
+.matchup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:5px}
+.matchup-tile{border-radius:8px;padding:6px 4px;text-align:center;font-size:9px;font-weight:700}
+.matchup-mult{font-size:12px;font-weight:900;display:block}
+.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{
+  background:#1a1a2e;border:0.5px solid #2a2a3e;border-radius:8px;
+  padding:6px 12px;font-size:10px;cursor:pointer;color:#888;
+  font-family:'Orbitron',monospace;transition:.2s;
 }
-
-.name{
-font-size:3rem;
-font-weight:900;
-margin-bottom:10px;
-text-transform:uppercase;
-}
-
-.subtitle{
-color:#aaa;
-margin-bottom:20px;
-}
-
-.types{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-.type{
-padding:10px 18px;
-border-radius:999px;
-font-weight:bold;
-color:white;
-text-transform:uppercase;
-}
-
-.infoGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin-bottom:25px;
-}
-
-.infoCard{
-background:#111;
-padding:15px;
-border-radius:20px;
-border:1px solid #333;
-}
-
-.section{
-margin-top:25px;
-}
-
-.section h2{
-margin-bottom:15px;
-font-size:1.5rem;
-color:#ff4b4b;
-}
-
-.description{
-background:black;
-padding:20px;
-border-radius:20px;
-color:#88ff88;
-line-height:1.7;
-font-size:1rem;
-}
-
-.stat{
-margin-bottom:15px;
-}
-
-.statTop{
-display:flex;
-justify-content:space-between;
-margin-bottom:5px;
-}
-
-.bar{
-height:18px;
-background:#222;
-border-radius:999px;
-overflow:hidden;
-}
-
-.fill{
-height:100%;
-background:linear-gradient(to right,#00ff99,#00bfff);
-border-radius:999px;
-}
-
-.moveList,
-.roleList{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.badge{
-padding:10px 15px;
-border-radius:15px;
-background:#181818;
-border:1px solid #333;
-}
-
-.tier{
-font-size:2rem;
-font-weight:900;
-color:#00ff99;
-text-shadow:0 0 10px #00ff99;
-}
-
-.loader{
-text-align:center;
-padding:30px;
-font-size:1.2rem;
-color:#aaa;
-}
+.tab.active{background:#e63946;border-color:#e63946;color:white}
+.pane{display:none}
+.pane.active{display:block}
+.gender-row{display:flex;gap:10px;margin-top:2px}
+.gender-m{color:#74b9ff;font-size:11px}
+.gender-f{color:#fd79a8;font-size:11px}
+.set-card{background:#0f0f1a;border:0.5px solid #2a2a3e;border-radius:10px;padding:10px;margin-bottom:8px}
+.set-name{font-size:11px;font-weight:700;color:#74b9ff;margin-bottom:6px}
+.set-detail{font-size:10px;color:#888;font-family:monospace;line-height:1.6}
 </style>
 </head>
 <body>
-
 <div class="container">
-
-<h1 class="title">POKÉDEX</h1>
-
-<div class="searchBox">
-<input id="search" placeholder="Nom ou numéro du Pokémon">
-<button onclick="loadPokemon()">RECHERCHER</button>
-</div>
-
-<div class="dex">
-
-<div class="panel">
-<div class="screen">
-<img id="pokemonImage" src="">
-</div>
-</div>
-
-<div class="panel">
-<div id="content" class="loader">
-Chargement...
-</div>
-</div>
-
-</div>
-
+  <h1>POKÉDEX</h1>
+  <div class="search-row">
+    <input id="q" placeholder="Nom ou numéro (fr/en)…" value="pikachu" onkeydown="if(event.key==='Enter')go()">
+    <button onclick="go()">CHERCHER</button>
+    <button class="btn-rand" onclick="rand()">?</button>
+  </div>
+  <div class="main">
+    <div class="left-col">
+      <div class="screen">
+        <div class="screen-scanline"></div>
+        <img id="sprite" src="" alt="">
+      </div>
+      <div id="poke-id" class="poke-id"></div>
+      <div id="type-badges" class="type-badges"></div>
+      <div id="stats-section"></div>
+    </div>
+    <div id="right" class="loader-msg">Chargement…</div>
+  </div>
 </div>
 
 <script>
+const TYPE_FR={normal:'Normal',fire:'Feu',water:'Eau',grass:'Plante',electric:'Électrik',ice:'Glace',fighting:'Combat',poison:'Poison',ground:'Sol',flying:'Vol',psychic:'Psy',bug:'Insecte',rock:'Roche',ghost:'Spectre',dragon:'Dragon',dark:'Ténèbres',steel:'Acier',fairy:'Fée'};
+const TYPE_COLOR={fire:'#e25822',water:'#2980b9',grass:'#27ae60',electric:'#f39c12',ice:'#74b9ff',fighting:'#c0392b',poison:'#8e44ad',ground:'#d35400',flying:'#81ecec',psychic:'#e91e96',bug:'#558b2f',rock:'#795548',ghost:'#4527a0',dragon:'#1565c0',dark:'#263238',steel:'#607d8b',fairy:'#e91e8c',normal:'#78909c'};
+const STAT_LABEL={hp:'HP',attack:'ATK',defense:'DEF','special-attack':'SpA','special-defense':'SpD',speed:'VIT'};
+const STAT_MAX=255;
+const tierColor={OU:'#e63946',UU:'#f4a261',RU:'#48cae4',NU:'#74b9ff',PU:'#a29bfe',Uber:'#ff6b6b',AG:'#ff6b6b',LC:'#55efc4',Unknown:'#555'};
 
-const typeColors={
-feu:'#ff6b35',
-eau:'#3498db',
-plante:'#2ecc71',
-électrik:'#f1c40f',
-psy:'#ff6ad5',
-glace:'#74b9ff',
-combat:'#c0392b',
-poison:'#8e44ad',
-sol:'#d35400',
-vol:'#81ecec',
-insecte:'#7bed9f',
-roche:'#a67c52',
-spectre:'#6c5ce7',
-dragon:'#4834d4',
-tenebres:'#2d3436',
-acier:'#95a5a6',
-fée:'#fd79a8',
-normal:'#b2bec3'
+const FR_NAME_MAP={};
+let frMapBuilding=false;
+let frMapReady=false;
+
+async function buildFrMap(){
+  if(frMapBuilding||frMapReady)return;
+  frMapBuilding=true;
+  try{
+    const r=await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=1025');
+    const d=await r.json();
+    const chunks=[];
+    for(let i=0;i<d.results.length;i+=50)chunks.push(d.results.slice(i,i+50));
+    for(const chunk of chunks){
+      await Promise.all(chunk.map(async s=>{
+        try{
+          const sr=await fetch(s.url);
+          const sd=await sr.json();
+          const fr=sd.names.find(n=>n.language.name==='fr');
+          if(fr)FR_NAME_MAP[fr.name.toLowerCase()]=s.name;
+        }catch(e){}
+      }));
+    }
+    frMapReady=true;
+  }catch(e){}
 }
 
-async function loadPokemon(){
-
-try{
-
-const value=document.getElementById('search').value.toLowerCase() || 'pikachu'
-
-const res=await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`)
-const data=await res.json()
-
-const speciesRes=await fetch(data.species.url)
-const species=await speciesRes.json()
-
-const fr=species.flavor_text_entries.find(
-entry=>entry.language.name==='fr'
-)
-
-const name=data.name
-
-let comp={
-  tier:'Unknown',
-  roles:['Balanced'],
-  items:['Leftovers'],
-  moves:data.moves.slice(0,4).map(m=>m.move.name)
+function resolveName(input){
+  const low=input.trim().toLowerCase();
+  return FR_NAME_MAP[low]||low;
 }
 
-try{
-
-const showdownRes=await fetch(
-`https://raw.githubusercontent.com/pkmn/smogon/main/data/sets/gen9ou.json`
-)
-
-const showdownData=await showdownRes.json()
-
-const pokeData=showdownData[name]
-
-if(pokeData){
-
-const firstSet=Object.values(pokeData)[0]
-
-comp={
-  tier:'OU',
-  roles:['Competitive','Meta'],
-  items:firstSet.items || ['Leftovers'],
-  moves:firstSet.moves || data.moves.slice(0,4).map(m=>m.move.name)
+async function smogonTier(name){
+  const gens=['gen9ou','gen9uu','gen9ru','gen9nu','gen9pu','gen9uber','gen9lc'];
+  const tierName={gen9ou:'OU',gen9uu:'UU',gen9ru:'RU',gen9nu:'NU',gen9pu:'PU',gen9uber:'Uber',gen9lc:'LC'};
+  for(const g of gens){
+    try{
+      const r=await fetch(`https://raw.githubusercontent.com/pkmn/smogon/main/data/sets/${g}.json`);
+      if(!r.ok)continue;
+      const d=await r.json();
+      const key=Object.keys(d).find(k=>k.toLowerCase()===name.toLowerCase());
+      if(key){
+        const sets=Object.entries(d[key]);
+        const allMoves=[],allItems=[],allAbilities=[],allNatures=[];
+        sets.forEach(([,s])=>{
+          if(s.moves)allMoves.push(...s.moves.flat());
+          if(s.items)allItems.push(...s.items);
+          if(s.abilities)allAbilities.push(...s.abilities);
+          if(s.natures)allNatures.push(...s.natures);
+        });
+        const uniq=a=>[...new Set(a)];
+        return{tier:tierName[g],moves:uniq(allMoves).slice(0,8),items:uniq(allItems).slice(0,6),abilities:uniq(allAbilities).slice(0,4),natures:uniq(allNatures).slice(0,4),sets:sets.map(([n,s])=>({name:n,s})).slice(0,3)};
+      }
+    }catch(e){}
+  }
+  return{tier:'Unknown',moves:[],items:[],abilities:[],natures:[],sets:[]};
 }
 
+async function getAbilityDesc(url){
+  try{
+    const r=await fetch(url);
+    const d=await r.json();
+    const fr=d.flavor_text_entries.find(e=>e.language.name==='fr')||d.flavor_text_entries.find(e=>e.language.name==='en');
+    return fr?fr.flavor_text.replace(/\n/g,' '):'';
+  }catch(e){return'';}
 }
 
-}catch(e){
-console.log('Smogon data unavailable')
+async function getEvolution(speciesData){
+  try{
+    const r=await fetch(speciesData.evolution_chain.url);
+    const d=await r.json();
+    const chain=[];
+    let node=d.chain;
+    while(node){chain.push(node.species.name);node=node.evolves_to[0]||null;}
+    return chain;
+  }catch(e){return[];}
 }
 
-const types=data.types.map(t=>`
-<div class="type" style="background:${typeColors[t.type.name] || '#666'}">
-${t.type.name}
-</div>
-`).join('')
-
-const stats=data.stats.map(stat=>`
-<div class="stat">
-<div class="statTop">
-<span>${stat.stat.name}</span>
-<span>${stat.base_stat}</span>
-</div>
-<div class="bar">
-<div class="fill" style="width:${Math.min(stat.base_stat,100)}%"></div>
-</div>
-</div>
-`).join('')
-
-const roles=comp.roles.map(r=>`<div class="badge">${r}</div>`).join('')
-const items=comp.items.map(r=>`<div class="badge">${r}</div>`).join('')
-const moves=comp.moves.map(r=>`<div class="badge">${r}</div>`).join('')
-
-
-const html=`
-
-<div class="name">
-${data.name} #${data.id}
-</div>
-
-<div class="subtitle">
-Pokémon compétitif & stratégique
-</div>
-
-<div class="types">
-${types}
-</div>
-
-<div class="infoGrid">
-
-<div class="infoCard">
-<h3>Taille</h3>
-<p>${data.height/10} m</p>
-</div>
-
-<div class="infoCard">
-<h3>Poids</h3>
-<p>${data.weight/10} kg</p>
-</div>
-
-<div class="infoCard">
-<h3>Talent</h3>
-<p>${data.abilities[0].ability.name}</p>
-</div>
-
-<div class="infoCard">
-<h3>Tier</h3>
-<p class="tier">${comp.tier}</p>
-</div>
-
-</div>
-
-<div class="section">
-<h2>Description</h2>
-<div class="description">
-${fr ? fr.flavor_text : 'Aucune description.'}
-</div>
-</div>
-
-<div class="section">
-<h2>Rôles conseillés</h2>
-<div class="roleList">
-${roles}
-</div>
-</div>
-
-<div class="section">
-<h2>Objets populaires</h2>
-<div class="roleList">
-${items}
-</div>
-</div>
-
-<div class="section">
-<h2>Attaques populaires</h2>
-<div class="moveList">
-${moves}
-</div>
-</div>
-
-<div class="section">
-<h2>Statistiques</h2>
-${stats}
-</div>
-
-`
-
-
-
-
-
-
-
-
-document.getElementById('pokemonImage').src=
-data.sprites.other['official-artwork'].front_default
-
-document.getElementById('content').innerHTML=html
-
-}
-catch(err){
-
-console.log(err)
-
-document.getElementById('content').innerHTML=`
-<div class="loader">
-Pokémon introuvable.
-</div>
-`
-
+async function getSpriteForMon(name){
+  try{
+    const r=await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    const d=await r.json();
+    return d.sprites.other['official-artwork'].front_default||d.sprites.front_default;
+  }catch(e){return'';}
 }
 
+function typeMatchups(types){
+  const chart={normal:{rock:.5,ghost:0,steel:.5},fire:{fire:.5,water:.5,grass:2,ice:2,bug:2,rock:.5,dragon:.5,steel:2},water:{fire:2,water:.5,grass:.5,dragon:.5},grass:{fire:.5,water:2,grass:.5,poison:.5,ground:2,flying:.5,bug:.5,rock:2,dragon:.5,steel:.5},electric:{water:2,electric:.5,grass:.5,ground:0,flying:2,dragon:.5},ice:{fire:.5,water:.5,grass:2,ice:.5,ground:2,flying:2,dragon:2,steel:.5},fighting:{normal:2,ice:2,poison:.5,flying:.5,psychic:.5,bug:.5,rock:2,ghost:0,dark:2,steel:2,fairy:.5},poison:{grass:2,poison:.5,ground:.5,rock:.5,ghost:.5,steel:0,fairy:2},ground:{fire:2,electric:2,grass:.5,poison:2,flying:0,bug:.5,rock:2,steel:2},flying:{electric:.5,grass:2,fighting:2,bug:2,rock:.5,steel:.5},psychic:{fighting:2,poison:2,psychic:.5,dark:0,steel:.5},bug:{fire:.5,grass:2,fighting:.5,poison:.5,flying:.5,psychic:2,ghost:.5,dark:2,steel:.5,fairy:.5},rock:{fire:2,ice:2,fighting:.5,ground:.5,flying:2,bug:2,steel:.5},ghost:{normal:0,psychic:2,ghost:2,dark:.5},dragon:{dragon:2,steel:.5,fairy:0},dark:{fighting:.5,psychic:2,ghost:2,dark:.5,fairy:.5},steel:{fire:.5,water:.5,electric:.5,ice:2,rock:2,steel:.5,fairy:2},fairy:{fire:.5,fighting:2,poison:.5,dragon:2,dark:2,steel:.5}};
+  const result={};
+  types.forEach(t=>{const atk=chart[t]||{};Object.entries(atk).forEach(([def,mult])=>{result[def]=(result[def]||1)*mult;});});
+  return result;
 }
 
-loadPokemon()
+function multColor(m){
+  if(m===0)return{bg:'#1a1a2e',text:'#555'};
+  if(m===0.25)return{bg:'#0a2e0a',text:'#00cc55'};
+  if(m===0.5)return{bg:'#1a2e1a',text:'#27ae60'};
+  if(m===2)return{bg:'#2e1a1a',text:'#e67e22'};
+  if(m===4)return{bg:'#3a0a0a',text:'#e63946'};
+  return{bg:'#1a1a2e',text:'#777'};
+}
 
+let activeTab='info';
+
+function setTab(t){
+  activeTab=t;
+  document.querySelectorAll('.tab').forEach(el=>{el.classList.toggle('active',el.dataset.tab===t)});
+  document.querySelectorAll('.pane').forEach(el=>{el.classList.toggle('active',el.id==='pane-'+t)});
+}
+
+async function go(){
+  const val=document.getElementById('q').value.trim()||'pikachu';
+  await loadPoke(val);
+}
+
+async function rand(){
+  const id=Math.floor(Math.random()*1010)+1;
+  document.getElementById('q').value=String(id);
+  await loadPoke(String(id));
+}
+
+async function loadPoke(input){
+  document.getElementById('right').innerHTML='<div class="loader-msg">Chargement…</div>';
+  document.getElementById('sprite').src='';
+  document.getElementById('type-badges').innerHTML='';
+  document.getElementById('poke-id').textContent='';
+  document.getElementById('stats-section').innerHTML='';
+
+  try{
+    let searchName=input.toLowerCase().trim();
+    if(!/^\d+$/.test(searchName)){
+      if(frMapReady){
+        searchName=resolveName(searchName);
+      }else{
+        buildFrMap();
+      }
+    }
+
+    const res=await fetch(`https://pokeapi.co/api/v2/pokemon/${searchName}`);
+    if(!res.ok)throw new Error('not found');
+    const data=await res.json();
+
+    const specRes=await fetch(data.species.url);
+    const species=await specRes.json();
+
+    const frName=species.names.find(n=>n.language.name==='fr')?.name||data.name;
+    const frDesc=species.flavor_text_entries.find(e=>e.language.name==='fr')?.flavor_text?.replace(/\n|\f/g,' ')||'';
+    const category=species.genera.find(g=>g.language.name==='fr')?.genus||'';
+    const genderRate=species.gender_rate;
+    const captureRate=species.capture_rate;
+    const baseHappiness=species.base_happiness;
+    const growthRate=species.growth_rate?.name||'';
+    const isBaby=species.is_baby;
+    const isLegendary=species.is_legendary;
+    const isMythical=species.is_mythical;
+
+    const types=data.types.map(t=>t.type.name);
+
+    document.getElementById('sprite').src=data.sprites.other['official-artwork'].front_default||data.sprites.front_default;
+    document.getElementById('poke-id').textContent=`#${String(data.id).padStart(4,'0')} — ${frName.toUpperCase()}`;
+    document.getElementById('type-badges').innerHTML=types.map(t=>`<span class="type-badge" style="background:${TYPE_COLOR[t]||'#555'}">${TYPE_FR[t]||t}</span>`).join('');
+
+    const stats=data.stats;
+    const total=stats.reduce((a,s)=>a+s.base_stat,0);
+    document.getElementById('stats-section').innerHTML=`
+      <div class="section-title" style="margin-top:6px">Statistiques — total ${total}</div>
+      ${stats.map(s=>{
+        const pct=Math.round(s.base_stat/STAT_MAX*100);
+        const col=s.base_stat>=100?'#00ff99':s.base_stat>=70?'#f4a261':'#e63946';
+        return`<div class="stat-bar-label"><span>${STAT_LABEL[s.stat.name]||s.stat.name}</span><span>${s.base_stat}</span></div>
+        <div class="stat-bar"><div class="stat-fill" style="width:${pct}%;background:${col}"></div></div>`;
+      }).join('')}
+    `;
+
+    const [evoChain, smogon, abilityDetails]=await Promise.all([
+      getEvolution(species),
+      smogonTier(data.name),
+      Promise.all(data.abilities.map(async a=>({name:a.ability.name,hidden:a.is_hidden,desc:await getAbilityDesc(a.ability.url)})))
+    ]);
+
+    const matchups=typeMatchups(types);
+    const weakEntries=Object.entries(matchups).filter(([,m])=>m>1).sort((a,b)=>b[1]-a[1]);
+    const resistEntries=Object.entries(matchups).filter(([,m])=>m>0&&m<1).sort((a,b)=>a[1]-b[1]);
+    const immuneEntries=Object.entries(matchups).filter(([,m])=>m===0);
+
+    let genderHtml='Asexué';
+    if(genderRate>=0&&genderRate<=8){
+      const femPct=Math.round(genderRate/8*100);
+      genderHtml=`<span class="gender-m">♂ ${100-femPct}%</span><span class="gender-f">♀ ${femPct}%</span>`;
+    }
+
+    let evoHtml='<span style="color:#555;font-size:10px">Pas d\'évolution</span>';
+    if(evoChain.length>1){
+      const sprites=await Promise.all(evoChain.map(getSpriteForMon));
+      evoHtml=`<div class="evo-row">${evoChain.map((name,i)=>`
+        ${i>0?'<span class="evo-arrow">→</span>':''}
+        <div class="evo-mon" onclick="document.getElementById('q').value='${name}';loadPoke('${name}')">
+          <img src="${sprites[i]||''}" alt="${name}">
+          <div>${name}</div>
+        </div>`).join('')}</div>`;
+    }
+
+    const specialTag=isLegendary?'<span style="color:#f4a261;font-size:10px;margin-left:8px">★ Légendaire</span>':isMythical?'<span style="color:#e91e96;font-size:10px;margin-left:8px">★ Fabuleux</span>':isBaby?'<span style="color:#74b9ff;font-size:10px;margin-left:8px">Bébé</span>':'';
+
+    const tabs=[{id:'info',label:'INFOS'},{id:'combat',label:'COMBAT'},{id:'strat',label:'STRAT'},{id:'evo',label:'ÉVO'}];
+
+    document.getElementById('right').innerHTML=`
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+        <div style="font-size:20px;font-weight:900">${frName.toUpperCase()}</div>${specialTag}
+      </div>
+      <div style="color:#555;font-size:10px;margin-bottom:12px;font-family:monospace">${category}</div>
+      <div class="tabs">${tabs.map(t=>`<div class="tab${t.id===activeTab?' active':''}" data-tab="${t.id}" onclick="setTab('${t.id}')">${t.label}</div>`).join('')}</div>
+
+      <div id="pane-info" class="pane${activeTab==='info'?' active':''}">
+        <div class="info-grid" style="margin-bottom:10px">
+          <div class="info-tile"><div class="lbl">Taille</div><div class="val">${(data.height/10).toFixed(1)} m</div></div>
+          <div class="info-tile"><div class="lbl">Poids</div><div class="val">${(data.weight/10).toFixed(1)} kg</div></div>
+          <div class="info-tile"><div class="lbl">Capture</div><div class="val">${captureRate}</div></div>
+          <div class="info-tile"><div class="lbl">Bonheur</div><div class="val">${baseHappiness??'—'}</div></div>
+          <div class="info-tile"><div class="lbl">Croissance</div><div class="val" style="font-size:10px">${growthRate}</div></div>
+          <div class="info-tile"><div class="lbl">Genre</div><div class="val"><div class="gender-row">${genderHtml}</div></div></div>
+        </div>
+        <div class="section-title">Description</div>
+        <div class="desc-box" style="margin-bottom:10px">${frDesc}</div>
+        <div class="section-title">Talents</div>
+        <div class="ability-row">
+          ${abilityDetails.map(a=>`<div class="ability-item">
+            <span class="ability-name">${a.name}</span>${a.hidden?'<span class="ability-hidden">Talent caché</span>':''}
+            ${a.desc?`<div class="ability-desc">${a.desc}</div>`:''}
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div id="pane-combat" class="pane${activeTab==='combat'?' active':''}">
+        ${weakEntries.length?`<div class="section-title">Faiblesses</div>
+        <div class="matchup-grid" style="margin-bottom:10px">${weakEntries.map(([t,m])=>{const c=multColor(m);return`<div class="matchup-tile" style="background:${c.bg}"><span class="matchup-mult" style="color:${c.text}">×${m}</span><span style="color:#aaa;font-size:9px">${TYPE_FR[t]||t}</span></div>`;}).join('')}</div>`:''}
+        ${resistEntries.length?`<div class="section-title">Résistances</div>
+        <div class="matchup-grid" style="margin-bottom:10px">${resistEntries.map(([t,m])=>{const c=multColor(m);return`<div class="matchup-tile" style="background:${c.bg}"><span class="matchup-mult" style="color:${c.text}">×${m}</span><span style="color:#aaa;font-size:9px">${TYPE_FR[t]||t}</span></div>`;}).join('')}</div>`:''}
+        ${immuneEntries.length?`<div class="section-title">Immunités</div>
+        <div class="matchup-grid">${immuneEntries.map(([t])=>`<div class="matchup-tile" style="background:#0f0f1a"><span class="matchup-mult" style="color:#555">×0</span><span style="color:#555;font-size:9px">${TYPE_FR[t]||t}</span></div>`).join('')}</div>`:''}
+      </div>
+
+      <div id="pane-strat" class="pane${activeTab==='strat'?' active':''}">
+        <div class="tier-box" style="margin-bottom:10px">
+          <div class="tier-letter" style="color:${tierColor[smogon.tier]||'#555'}">${smogon.tier}</div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:white">Tier Smogon</div>
+            <div class="tier-desc">Format compétitif Gen 9</div>
+          </div>
+        </div>
+        ${smogon.sets.length?`<div class="section-title">Sets recommandés</div>
+        ${smogon.sets.map(({name,s})=>`<div class="set-card">
+          <div class="set-name">${name}</div>
+          <div class="set-detail">
+            ${s.items?`Objet : <span style="color:#f4a261">${s.items.join(' / ')}</span><br>`:''}
+            ${s.abilities?`Talent : <span style="color:#a29bfe">${s.abilities.join(' / ')}</span><br>`:''}
+            ${s.natures?`Nature : <span style="color:#74b9ff">${s.natures.join(' / ')}</span><br>`:''}
+          </div>
+          ${s.moves?`<div class="badge-list" style="margin-top:6px">${s.moves.flat().slice(0,8).map(m=>`<span class="move-badge">${m}</span>`).join('')}</div>`:''}
+        </div>`).join('')}`:`<div class="desc-box">Aucune donnée Smogon.<br>Ce Pokémon n'est pas en méta compétitive standard.</div>`}
+        ${smogon.items.length?`<div class="section-title" style="margin-top:8px">Objets populaires</div><div class="badge-list" style="margin-bottom:8px">${smogon.items.map(i=>`<span class="badge">${i}</span>`).join('')}</div>`:''}
+        ${smogon.natures.length?`<div class="section-title">Natures</div><div class="badge-list">${smogon.natures.map(n=>`<span class="badge">${n}</span>`).join('')}</div>`:''}
+      </div>
+
+      <div id="pane-evo" class="pane${activeTab==='evo'?' active':''}">
+        <div class="section-title">Chaîne d'évolution</div>
+        ${evoHtml}
+      </div>
+    `;
+
+  }catch(err){
+    console.error(err);
+    document.getElementById('right').innerHTML='<div class="error-msg">Pokémon introuvable.<br>Essaie le nom anglais ou le numéro.</div>';
+  }
+}
+
+loadPoke('pikachu');
+buildFrMap();
 </script>
-
 </body>
 </html>
